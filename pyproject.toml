@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "pyafl_qemu_trace"
+version = "0.1.1"
+description = "A pip-installable distribution of afl-qemu-trace."
+authors = ["novafacing <rowanbhart@gmail.com>"]
+include = ["pyafl_qemu_trace/binaries/*"]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.build]
+script = "build.py"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,371 @@
+FROM debian:bullseye@sha256:4d6ab716de467aad58e91b1b720f0badd7478847ec7a18f66027d0f8a329a43c AS aflplusplus-builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update -y && \
+    apt-get install -y \
+    build-essential \
+    python3-dev \
+    automake \
+    git \
+    flex \
+    bison \
+    libglib2.0-dev \
+    libpixman-1-dev \
+    python3-setuptools \
+    ninja-build
+
+# - Gcc/Clang
+RUN apt-get update -y && \
+    apt-get install -y \
+    lsb-release \
+    wget \
+    software-properties-common
+
+# Install LLVM-13
+WORKDIR /llvm
+RUN wget https://apt.llvm.org/llvm.sh && \
+    chmod +x llvm.sh && \
+    ./llvm.sh 13
+RUN update-alternatives --install /usr/bin/clang++ clang++ $(which clang++-13) 100 \
+    && update-alternatives --install /usr/bin/clang clang $(which clang-13) 100 \
+    && update-alternatives --install /usr/bin/llvm-config llvm-config $(which llvm-config-13) 100
+
+RUN apt-get update -y && \
+    apt-get install -y gcc-9 \
+    g++-9 \
+    gcc-9-plugin-dev \
+    libstdc++-9-dev
+
+RUN update-alternatives --install /usr/bin/gcc gcc $(which gcc-9) 100 \
+    && update-alternatives --install /usr/bin/g++ g++ $(which g++-9) 100
+
+RUN git clone https://github.com/AFLplusplus/AFLplusplus /AFLplusplus
+WORKDIR /AFLplusplus
+RUN git fetch --all
+RUN git checkout 1d4f1e48797c064ee71441ba555b29fc3f467983
+
+FROM aflplusplus-builder AS aflplusplus-builder-aarch64-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=aarch64-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-alpha-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=alpha-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-arm-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=arm-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-avr-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=avr-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-cris-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=cris-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-hppa-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=hppa-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-i386-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=i386-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-m68k-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=m68k-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-microblaze-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=microblaze-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-microblazeel-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=microblazeel-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mips-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=mips-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mips64-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=mips64-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mips64el-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=mips64el-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mipsel-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=mipsel-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-moxie-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=moxie-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-nios2-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=nios2-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-or1k-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=or1k-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-ppc-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=ppc-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-ppc64-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=ppc64-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-riscv32-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=riscv32-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-riscv64-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=riscv64-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-rx-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=rx-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-s390x-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=s390x-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sh4-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=sh4-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sh4eb-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=sh4eb-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sparc-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=sparc-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sparc64-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=sparc64-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-tricore-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=tricore-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-x86_64-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=x86_64-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-xtensa-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=xtensa-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-xtensaeb-softmmu
+ENV STATIC=1
+ENV CPU_TARGET=xtensaeb-softmmu
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-aarch64
+ENV STATIC=1
+ENV CPU_TARGET=aarch64
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-aarch64_be
+ENV STATIC=1
+ENV CPU_TARGET=aarch64_be
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-alpha
+ENV STATIC=1
+ENV CPU_TARGET=alpha
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-arm
+ENV STATIC=1
+ENV CPU_TARGET=arm
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-armeb
+ENV STATIC=1
+ENV CPU_TARGET=armeb
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-cris
+ENV STATIC=1
+ENV CPU_TARGET=cris
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-hexagon
+ENV STATIC=1
+ENV CPU_TARGET=hexagon
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-hppa
+ENV STATIC=1
+ENV CPU_TARGET=hppa
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-i386
+ENV STATIC=1
+ENV CPU_TARGET=i386
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-m68k
+ENV STATIC=1
+ENV CPU_TARGET=m68k
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-microblaze
+ENV STATIC=1
+ENV CPU_TARGET=microblaze
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-microblazeel
+ENV STATIC=1
+ENV CPU_TARGET=microblazeel
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mips
+ENV STATIC=1
+ENV CPU_TARGET=mips
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mips64
+ENV STATIC=1
+ENV CPU_TARGET=mips64
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mips64el
+ENV STATIC=1
+ENV CPU_TARGET=mips64el
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mipsel
+ENV STATIC=1
+ENV CPU_TARGET=mipsel
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mipsn32
+ENV STATIC=1
+ENV CPU_TARGET=mipsn32
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-mipsn32el
+ENV STATIC=1
+ENV CPU_TARGET=mipsn32el
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-nios2
+ENV STATIC=1
+ENV CPU_TARGET=nios2
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-or1k
+ENV STATIC=1
+ENV CPU_TARGET=or1k
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-ppc
+ENV STATIC=1
+ENV CPU_TARGET=ppc
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-ppc64
+ENV STATIC=1
+ENV CPU_TARGET=ppc64
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-ppc64le
+ENV STATIC=1
+ENV CPU_TARGET=ppc64le
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-riscv32
+ENV STATIC=1
+ENV CPU_TARGET=riscv32
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-riscv64
+ENV STATIC=1
+ENV CPU_TARGET=riscv64
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-s390x
+ENV STATIC=1
+ENV CPU_TARGET=s390x
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sh4
+ENV STATIC=1
+ENV CPU_TARGET=sh4
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sh4eb
+ENV STATIC=1
+ENV CPU_TARGET=sh4eb
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sparc
+ENV STATIC=1
+ENV CPU_TARGET=sparc
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sparc32plus
+ENV STATIC=1
+ENV CPU_TARGET=sparc32plus
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-sparc64
+ENV STATIC=1
+ENV CPU_TARGET=sparc64
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-x86_64
+ENV STATIC=1
+ENV CPU_TARGET=x86_64
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-xtensa
+ENV STATIC=1
+ENV CPU_TARGET=xtensa
+RUN make distrib
+
+FROM aflplusplus-builder AS aflplusplus-builder-xtensaeb
+ENV STATIC=1
+ENV CPU_TARGET=xtensaeb
+RUN make distrib
