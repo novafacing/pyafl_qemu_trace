@@ -9,12 +9,40 @@ pip-installable afl-qemu-trace python package
 python3 -m pip install pyafl-qemu-trace
 ```
 
+## Building
+
+If you would like to build this package, clone it and run `poetry build -f wheel`.
+
+You will need to have `poetry`, `docker`, and `docker-compose` or `docker compose` (v2)
+installed.
+
 ## Examples
 
-```
+```python
 from pyafl_qemu_trace import qemu_path
 
+# Get the path to the tracer binary
 tracer = qemu_path("x86_64")
+
+# Run the tracer with the provided wrapper
+from pyafl_qemu_trace import TraceRunner
+from shutil import which
+
+retcode, stdout, stderr, log = TraceRunner.run(
+    "x86_64", 
+    which("xxd"), 
+    cwd="/tmp", 
+    input_data="\x41" * 400, 
+    timeout=10
+)
+
+# Parse the output of the tracer into a programmatically
+# workable data structure result
+from pyafl_qemu_trace import TraceParser
+
+result = TraceParser.parse(log)
+
+print(f"The trace has {len(result.addrs)} instructions!")
 ```
 
 ## Requirements
