@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 from pathlib import Path
 from typing import List
 from pkg_resources import resource_filename
@@ -10,7 +9,8 @@ def qemu_path(platform: str) -> str:
     """
     Get the path to the qemu tracer for the given platform
     """
-    pth = Path(qemu_base(), f"{PREFIX}-{platform}").resolve()
+    pth = Path(qemu_base(), f"{PREFIX}{platform}").resolve()
+    print(pth)
     if not pth.is_file():
         raise ValueError(f"No qemu tracer for {platform}")
     return str(pth)
@@ -38,3 +38,8 @@ def qemu_list() -> List[str]:
             )
         )
     )
+
+
+from pyafl_qemu_trace.events import QEMUEvent
+from pyafl_qemu_trace.run import TraceRunner
+from pyafl_qemu_trace.parse import TraceParser
