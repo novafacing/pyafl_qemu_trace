@@ -4,7 +4,7 @@ Run utilities for afl-qemu-trace
 
 from shutil import rmtree
 from typing import Any, Dict, Iterator, List, Optional, Tuple
-from subprocess import PIPE, run
+from subprocess import PIPE, CompletedProcess, TimeoutExpired, run
 from tempfile import TemporaryDirectory
 from os import mkfifo, unlink
 from os.path import join
@@ -44,8 +44,11 @@ def run_wrapper(q: Queue, *args, **kwargs) -> None:
     :param args: Arguments to pass to subprocess.run
     :param kwargs: Keyword arguments to pass to subprocess.run
     """
-    res = run(*args, **kwargs)  # pylint: disable=subprocess-run-check
-    q.put(res)
+    try:
+        res = run(*args, **kwargs)  # pylint: disable=subprocess-run-check
+        q.put(res)
+    except TimeoutExpired as e:
+        q.put(e)
 
 
 class TraceRunner:  # pylint: disable=too-few-public-methods
@@ -172,4 +175,9 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                             break
                         data += rv
                 res = q.get()
-                return (res.returncode, res.stdout, res.stderr, data)
+
+                if isinstance(res, CompletedProcess):
+                    return (res.returncode, res.stdout, res.stderr, data)
+                elif isinstance(res, TimeoutExpired):
+                    p.terminate()
+                    raise res
