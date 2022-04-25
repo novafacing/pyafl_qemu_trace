@@ -12,6 +12,9 @@ python3 -m pip install pyafl-qemu-trace
 
 ## Building
 
+Note: do *not* try to publish sdist! Only wheels will work since we are distributing
+binaries.
+
 If you would like to build this package, clone it and run `poetry build -f wheel`.
 
 You will need to have `poetry`, `docker`, and `docker-compose` or `docker compose` (v2)
