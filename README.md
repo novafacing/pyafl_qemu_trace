@@ -1,4 +1,5 @@
 [![PyPI version](https://badge.fury.io/py/pyafl-qemu-trace.svg)](https://badge.fury.io/py/pyafl-qemu-trace)
+
 # pyafl_qemu_trace
 
 pip-installable afl-qemu-trace python package
@@ -15,6 +16,18 @@ If you would like to build this package, clone it and run `poetry build -f wheel
 
 You will need to have `poetry`, `docker`, and `docker-compose` or `docker compose` (v2)
 installed.
+
+To build multiple versions (if you have multiple python versions installed) just:
+```sh
+$ deactivate
+$ poetry env use 3.8
+$ poetry build -f wheel
+<...snip...for as many versions as you need...>
+$ deactivate
+$ poetry env use 3.9
+$ poetry build -f wheel
+$ poetry publish
+```
 
 ## Examples
 

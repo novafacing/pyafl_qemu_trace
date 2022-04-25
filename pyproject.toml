@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyafl_qemu_trace"
-version = "0.2.0"
+version = "0.2.2"
 description = "A pip-installable distribution of afl-qemu-trace."
 authors = ["novafacing <rowanbhart@gmail.com>"]
 include = ["pyafl_qemu_trace/binaries/*"]
@@ -9,7 +9,7 @@ homepage = "https://github.com/novafacing/pyafl_qemu_trace.git"
 repository = "https://github.com/novafacing/pyafl_qemu_trace.git"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = ">=3.7,<=4.0"
 attrs = "^21.4.0"
 
 [tool.poetry.dev-dependencies]
