@@ -169,7 +169,6 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
             with open(fifo, "rb") as fifo_read:
                 while True:
                     rv = fifo_read.read()
-                    print(f"read {len(rv)} bytes")
                     if len(rv) == 0:
                         break
                     data += rv

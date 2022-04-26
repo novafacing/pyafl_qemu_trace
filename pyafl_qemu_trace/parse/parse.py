@@ -158,6 +158,8 @@ class TraceParser:
             contents = log
         elif isinstance(log, Path):
             contents = log.read_text(encoding="utf-8", errors="ignore")
+        else:
+            raise TypeError(f"log must be a string or a Path, got {type(log)}")
 
         res = TraceResult()
 
