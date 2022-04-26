@@ -160,8 +160,8 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                 args=(
                     q,
                     args,
+                    run_args,
                 ),
-                kwargs=run_args,
             )
 
             p.start()
