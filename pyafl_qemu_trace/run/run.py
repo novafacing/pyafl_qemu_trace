@@ -178,4 +178,5 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                     return (res.returncode, res.stdout, res.stderr, data)
                 elif isinstance(res, TimeoutExpired):
                     p.terminate()
-                    raise res
+                    # Try and return the data anyway even if it's incomplete
+                    return (-1, b"", b"", data)
