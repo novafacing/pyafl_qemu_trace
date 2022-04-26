@@ -173,7 +173,6 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                         break
                     data += rv
                 res = q.get()
-                print(res)
 
                 if isinstance(res, CompletedProcess):
                     return (res.returncode, res.stdout, res.stderr, data)
