@@ -35,7 +35,7 @@ def TemporaryFifo(  # pylint: disable=invalid-name
         rmtree(tmpdir.name)
 
 
-def run_wrapper(q: Queue, *args, **kwargs) -> None:
+def run_wrapper(q: Queue, args, **kwargs) -> None:
     """
     Wrapper for running subprocess.run in a multiprocess and
     passing the result to the queue
@@ -45,7 +45,8 @@ def run_wrapper(q: Queue, *args, **kwargs) -> None:
     :param kwargs: Keyword arguments to pass to subprocess.run
     """
     try:
-        res = run(*args, **kwargs)  # pylint: disable=subprocess-run-check
+        print(f"run({args}, **{kwargs})")
+        res = run(args, **kwargs)  # pylint: disable=subprocess-run-check
         q.put(res)
     except TimeoutExpired as e:
         q.put(e)
@@ -123,8 +124,7 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
         if timeout is not None:
             run_args["timeout"] = timeout
 
-        run_args["stdout"] = PIPE
-        run_args["stderr"] = PIPE
+        run_args["capture_output"] = True
 
         with TemporaryFifo("pipe", shm_dir) as fifo:
             args = [qemu_bin]
@@ -159,7 +159,7 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                 target=run_wrapper,
                 args=(
                     q,
-                    *args,
+                    args,
                 ),
                 kwargs=run_args,
             )
@@ -168,13 +168,14 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
 
             data = b""
             with open(fifo, "rb") as fifo_read:
-                while p.is_alive():
-                    while True:
-                        rv = fifo_read.read()
-                        if not rv:
-                            break
-                        data += rv
+                while True:
+                    rv = fifo_read.read()
+                    print(f"read {len(rv)} bytes")
+                    if len(rv) == 0:
+                        break
+                    data += rv
                 res = q.get()
+                print(res)
 
                 if isinstance(res, CompletedProcess):
                     return (res.returncode, res.stdout, res.stderr, data)
