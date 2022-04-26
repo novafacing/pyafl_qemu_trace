@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyafl_qemu_trace"
-version = "0.2.6"
+version = "0.2.7"
 description = "A pip-installable distribution of afl-qemu-trace."
 authors = ["novafacing <rowanbhart@gmail.com>"]
 include = ["pyafl_qemu_trace/binaries/*"]

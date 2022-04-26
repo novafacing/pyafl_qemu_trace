@@ -45,7 +45,6 @@ def run_wrapper(q: Queue, args, **kwargs) -> None:
     :param kwargs: Keyword arguments to pass to subprocess.run
     """
     try:
-        print(f"run({args}, **{kwargs})")
         res = run(args, **kwargs)  # pylint: disable=subprocess-run-check
         q.put(res)
     except TimeoutExpired as e:
