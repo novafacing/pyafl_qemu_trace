@@ -34,6 +34,8 @@ $ poetry publish
 
 ## Examples
 
+### General Usage
+
 ```python
 from pyafl_qemu_trace import qemu_path
 
@@ -59,6 +61,46 @@ from pyafl_qemu_trace import TraceParser
 result = TraceParser.parse(log)
 
 print(f"The trace has {len(result.addrs)} instructions!")
+```
+
+### Stupidly Parallel Tracing
+
+```python
+from concurrent.futures import as_completed, ThreadPoolExecutor
+from pyafl_qemu_trace import TraceRunner, TraceParser
+from shutil import which
+
+# .41s to run this...not bad!
+with ThreadPoolExecutor() as executor:
+    futures = []
+    for a in (
+        b"\x41",
+        b"\x42",
+        b"\x43",
+        b"\x44",
+        b"\x45",
+        b"\x46",
+        b"\x47",
+        b"\x48",
+    ):
+        futures.append(
+            executor.submit(
+                TraceRunner.run,
+                "x86_64",
+                which("xxd"),
+                input_data=a * 400,
+                ld_library_paths=["/lib64", "/lib"],
+                timeout=5,
+            )
+        )
+
+    for future in as_completed(futures):
+        try:
+            retcode, stdout, stderr, log = future.result()
+            print(f"Completed with: {retcode} and loglength {len(log)}")
+            assert len(log) == 8872190
+        except Exception as e:
+            assert False, "Exception: {}".format(e)
 ```
 
 ## Requirements
