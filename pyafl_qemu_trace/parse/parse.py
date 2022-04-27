@@ -52,6 +52,21 @@ STRACE_RE = compile(
     rb"(\s?errno\s?=\s?(?P<syscall_errno>[-]?[0-9]+)\s?\((?P<syscall_errmsg>[^\)]+)\))?"
 )
 
+MAPPING_RES = {
+    "guest_base": compile(rb"guest_base\s+0x(?P<guest_base>[0-9a-fA-F]+)"),
+    "start_brk": compile(rb"start_brk\s+0x(?P<start_brk>[0-9a-fA-F]+)"),
+    "start_code": compile(rb"start_code\s+0x(?P<start_code>[0-9a-fA-F]+)"),
+    "end_code": compile(rb"end_code\s+0x(?P<end_code>[0-9a-fA-F]+)"),
+    "start_data": compile(rb"start_data\s+0x(?P<start_data>[0-9a-fA-F]+)"),
+    "end_data": compile(rb"end_data\s+0x(?P<end_data>[0-9a-fA-F]+)"),
+    "start_stack": compile(rb"start_stack\s+0x(?P<start_stack>[0-9a-fA-F]+)"),
+    "brk": compile(rb"brk\s+0x(?P<brk>[0-9a-fA-F]+)"),
+    "entry": compile(rb"entry\s+0x(?P<entry>[0-9a-fA-F]+)"),
+    "argv_start": compile(rb"argv_start\s+0x(?P<argv_start>[0-9a-fA-F]+)"),
+    "env_start": compile(rb"env_start\s+0x(?P<env_start>[0-9a-fA-F]+)"),
+    "auxv_start": compile(rb"auxv_start\s+0x(?P<auxv_start>[0-9a-fA-F]+)"),
+}
+
 V = TypeVar("V")
 
 
@@ -82,7 +97,7 @@ class Syscall:
     err: Optional[bytes] = None
 
 
-@define(frozen=True, slots=True)
+@define(slots=True)
 class TraceResult:
     """
     Result of a trace
@@ -95,6 +110,20 @@ class TraceResult:
     maps: Dict[int, Set[MMap]]
     # Mapping of the index in addrs: syscall at that last index before the syscall
     syscalls: Dict[int, Syscall]
+    # Mapping information
+    guest_base: Optional[int] = None
+    start_brk: Optional[int] = None
+    start_code: Optional[int] = None
+    end_code: Optional[int] = None
+    start_data: Optional[int] = None
+    end_data: Optional[int] = None
+    start_stack: Optional[int] = None
+    brk: Optional[int] = None
+    entry: Optional[int] = None
+    argv_start: Optional[int] = None
+    env_start: Optional[int] = None
+    auxv_start: Optional[int] = None
+    mmap_min: Optional[int] = None
 
 
 def interleave_lambda_longest(func: Callable, *args: Iterable[V]) -> Iterator[V]:
@@ -163,6 +192,14 @@ class TraceParser:
             raise TypeError(f"log must be a string or a Path, got {type(log)}")
 
         res = TraceResult(array("Q"), defaultdict(set), dict())
+
+        mapping_data = {}
+        for type, regex in MAPPING_RES.items():
+            mapping_data[type] = regex.search(contents)
+
+        for typ, mtch in mapping_data.items():
+            if mtch is not None:
+                setattr(res, typ, int(mtch.group(typ), base=16))
 
         for tmatch in interleave_lambda_longest(
             getnext,

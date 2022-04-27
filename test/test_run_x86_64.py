@@ -92,7 +92,7 @@ def test_parse_real_x86_64() -> None:
 
     tr = TraceParser.parse(res[3])
 
-    assert len(tr.addrs) == 1618160
+    assert len(tr.addrs) == 1618145
 
 
 def test_parse_multi_real_x86_64() -> None:
@@ -112,6 +112,9 @@ def test_parse_multi_real_x86_64() -> None:
         )
 
         tr = TraceParser.parse(res[3])
+        print(
+            list(filter(lambda s: s.name in (b"mmap", b"open"), tr.syscalls.values()))
+        )
 
         print(i, len(tr.addrs))
 
