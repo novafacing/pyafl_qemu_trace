@@ -171,12 +171,18 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                     rv = fifo_read.read()
                     if len(rv) == 0:
                         break
+                    # This is a choice -- you may want to do this differently,
+                    # but if you are going to pass `data` into `TraceParser.parse`, it
+                    # will want a string anyway and anything that errors isn't gonna match
+                    # a regex anyway
+
                     data += rv
                 res = q.get()
 
                 if isinstance(res, CompletedProcess):
                     return (res.returncode, res.stdout, res.stderr, data)
-                elif isinstance(res, TimeoutExpired):
+
+                if isinstance(res, TimeoutExpired):
                     p.terminate()
                     # Try and return the data anyway even if it's incomplete
                     return (-1, b"", b"", data)

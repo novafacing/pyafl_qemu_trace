@@ -2,6 +2,7 @@
 Utilities for parsing afl qemu trace logs
 """
 
+from array import array
 from collections import defaultdict
 from functools import partial
 from pathlib import Path
@@ -24,31 +25,31 @@ from attr import define, field
 base16 = partial(int, base=16)
 
 TRACE_RE = compile(
-    r"Trace\s+(?P<trace_number>[0-9]+):\s+(?P<host_addr>0x[0-9a-fA-F]+)\s+"
-    r"\[(?P<flags1>[0-9a-fA-F]+)"
-    r"\/(?P<guest_addr>[0-9a-fA-F]+)"
-    r"\/(?P<flags2>0x[0-9a-fA-F]+)\]"
+    rb"Trace\s+(?P<trace_number>[0-9]+):\s+(?P<host_addr>0x[0-9a-fA-F]+)\s+"
+    rb"\[(?P<flags1>[0-9a-fA-F]+)"
+    rb"\/(?P<guest_addr>[0-9a-fA-F]+)"
+    rb"\/(?P<flags2>0x[0-9a-fA-F]+)\]"
 )
 
 MMAP_RE = compile(
     # Header ------------------------------------------------------
-    r"start\s+end\s+size\s+prot\n"
+    rb"start\s+end\s+size\s+prot\n"
     # Start-End ---------------------------------------------------
-    r"(?:(?P<start>[0-9a-fA-F]+)-(?P<end>[0-9a-fA-F]+)"
+    rb"(?:(?P<start>[0-9a-fA-F]+)-(?P<end>[0-9a-fA-F]+)"
     # Size Prot ---------------------------------------------------
-    r"\s+(?P<size>[0-9a-fA-F]+)\s+(?P<prot>[rwx-]+)[\n]?)+"
+    rb"\s+(?P<size>[0-9a-fA-F]+)\s+(?P<prot>[rwx-]+)[\n]?)+"
 )
 
 MMAP_LINE_RE = compile(
-    r"(?:(?P<start>[0-9a-fA-F]+)-(?P<end>[0-9a-fA-F]+)"
+    rb"(?:(?P<start>[0-9a-fA-F]+)-(?P<end>[0-9a-fA-F]+)"
     # Size Prot ---------------------------------------------------
-    r"\s+(?P<size>[0-9a-fA-F]+)\s+(?P<prot>[rwx-]+)[\n]?)"
+    rb"\s+(?P<size>[0-9a-fA-F]+)\s+(?P<prot>[rwx-]+)[\n]?)"
 )
 
 STRACE_RE = compile(
-    r"(?P<syscall_num>[0-9]+)\s+(?P<syscall_name>\w+)\((?P<syscall_args>[^\)]*)\)"
-    r"(?P<syscall_output>[^=]|\n)*=\s*(?P<syscall_ret>[-]?[0-9]+)"
-    r"(\s?errno\s?=\s?(?P<syscall_errno>[-]?[0-9]+)\s?\((?P<syscall_errmsg>[^\)]+)\))?"
+    rb"(?P<syscall_num>[0-9]+)\s+(?P<syscall_name>\w+)\((?P<syscall_args>[^\)]*)\)"
+    rb"(?P<syscall_output>[^=]|\n)*=\s*(?P<syscall_ret>[-]?[0-9]+)"
+    rb"(\s?errno\s?=\s?(?P<syscall_errno>[-]?[0-9]+)\s?\((?P<syscall_errmsg>[^\)]+)\))?"
 )
 
 V = TypeVar("V")
@@ -63,7 +64,7 @@ class MMap:
     start: int = field(converter=lambda x: int(x, base=16))  # type: ignore
     end: int = field(converter=lambda x: int(x, base=16))  # type: ignore
     size: int = field(converter=lambda x: int(x, base=16))  # type: ignore
-    prot: str
+    prot: bytes
 
 
 @define(frozen=True, slots=True)
@@ -72,13 +73,13 @@ class Syscall:
     Simple descriptor of a syscall
     """
 
-    name: str
+    name: bytes
     ret: int = field(converter=int)
-    args: List[str] = field(factory=list)
+    args: List[bytes] = field(factory=list)
     errno: Optional[int] = field(
         default=None, converter=lambda x: int(x) if x else None
     )
-    err: Optional[str] = None
+    err: Optional[bytes] = None
 
 
 @define(frozen=True, slots=True)
@@ -88,12 +89,12 @@ class TraceResult:
     """
 
     # Straight up list of addresses
-    addrs: List[int] = field(factory=list)
+    addrs: array
     # Mapping of index in addrs: list of mmaps in the mapping output at that last index before
     # the mapping
-    maps: Dict[int, Set[MMap]] = field(factory=partial(defaultdict, lambda: set()))
+    maps: Dict[int, Set[MMap]]
     # Mapping of the index in addrs: syscall at that last index before the syscall
-    syscalls: Dict[int, Syscall] = field(factory=dict)
+    syscalls: Dict[int, Syscall]
 
 
 def interleave_lambda_longest(func: Callable, *args: Iterable[V]) -> Iterator[V]:
@@ -147,21 +148,21 @@ class TraceParser:
     """
 
     @classmethod
-    def parse(cls, log: Union[Path, str]) -> TraceResult:
+    def parse(cls, log: Union[Path, bytes]) -> TraceResult:
         """
         Parse a log from either a file or a string
 
         :param log: The log file
         """
 
-        if isinstance(log, str):
+        if isinstance(log, bytes):
             contents = log
         elif isinstance(log, Path):
-            contents = log.read_text(encoding="utf-8", errors="ignore")
+            contents = log.read_bytes()
         else:
             raise TypeError(f"log must be a string or a Path, got {type(log)}")
 
-        res = TraceResult()
+        res = TraceResult(array("Q"), defaultdict(set), dict())
 
         for tmatch in interleave_lambda_longest(
             getnext,
@@ -188,7 +189,7 @@ class TraceParser:
                 res.syscalls[len(res.addrs) - 1] = Syscall(
                     mtch.group("syscall_name"),
                     mtch.group("syscall_ret"),
-                    mtch.group("syscall_args").split(","),
+                    mtch.group("syscall_args").split(b","),
                     mtch.groupdict().get("syscall_errno"),
                     mtch.groupdict().get("syscall_errmsg"),
                 )

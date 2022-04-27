@@ -109,6 +109,12 @@ Either `docker-compose` or `docker compose` should be available at build time, b
 installing, no dependencies are required, this basically just downloads a bunch of
 binaries for you.
 
+## Testing
+
+Tests can be run with `poetry run pytest`, you'll need to run `poetry install` first.
+
+Profiling with memray can be added to tests by running `poetry run pytest --memray`.
+
 ## Targets
 
 Supported targets for `afl-qemu-trace` are as follows, but at the moment only `x86_64`
