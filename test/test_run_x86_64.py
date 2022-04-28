@@ -2,13 +2,14 @@
 Test running afl-qemu-trace on an x86_64 binary
 """
 
-from gc import collect
 from pathlib import Path
-from shutil import which
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 from signal import SIGTERM
+from typing import List
 from psutil import Process, NoSuchProcess
-from os import getpid, kill
+from os import getpid
+
+from angr import Project
 
 from pyafl_qemu_trace import TraceRunner
 from pyafl_qemu_trace import TraceParser
@@ -126,6 +127,7 @@ def test_parse_multi_parallel_real_x86_64() -> None:
     flight_routes = TEST_BINS_DIR / "Flight_Routes" / "Flight_Routes"
     t_executor = ThreadPoolExecutor()
     p_executor = ProcessPoolExecutor()
+    results: List[TraceResult] = []
 
     try:
         jobs = set()
@@ -137,7 +139,7 @@ def test_parse_multi_parallel_real_x86_64() -> None:
                     str(flight_routes),
                     cwd=str(flight_routes.parent),
                     input_data=infile.read_bytes(),
-                    timeout=10,
+                    timeout=30,
                     ld_library_paths=[str(TEST_BINS_DIR / "Flight_Routes")],
                 )
             )
@@ -155,11 +157,7 @@ def test_parse_multi_parallel_real_x86_64() -> None:
                             )
                             jobs.add(p_executor.submit(TraceParser.parse, log))
                         elif isinstance(result, TraceResult):
-                            print(
-                                f"Trace completed with: {len(result.addrs)} addrs "
-                                f"{len(result.maps)} maps and "
-                                f"{len(result.syscalls)} syscalls"
-                            )
+                            results.append(result)
                     except Exception as e:
                         assert False, "Exception: {}".format(e)
 
@@ -171,7 +169,29 @@ def test_parse_multi_parallel_real_x86_64() -> None:
         p_executor.shutdown(wait=False, cancel_futures=True)
         kill_children()
         print("Done.")
-        return
+
+    p = Project(str(flight_routes), auto_load_libs=False)
+    addr_range = (
+        p.loader.main_object.min_addr,
+        p.loader.main_object.max_addr,
+    )
+
+    for res in results:
+        # Check the number of addresses in the trace that are actually in the address space
+        # we expect for the binary -- a failure here could make it difficult to convert the trace
+        # into another representation or explore it as a graph.
+        count_in = 0
+        count_out = 0
+        for addr in res.addrs:
+            if addr_range[0] <= addr <= addr_range[1]:
+                count_in += 1
+            else:
+                count_out += 1
+
+        print(f"{count_in} addresses in, {count_out} addresses out of {len(res.addrs)}")
+
+        assert count_out > 0, "No addresses in expected library ranges."
+        assert count_in > 0, "No addresses in expected program ranges."
 
 
 def test_run_x86_64_joblib() -> None:

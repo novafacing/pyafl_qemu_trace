@@ -10,7 +10,6 @@ def qemu_path(platform: str) -> str:
     Get the path to the qemu tracer for the given platform
     """
     pth = Path(qemu_base(), f"{PREFIX}{platform}").resolve()
-    print(pth)
     if not pth.is_file():
         raise ValueError(f"No qemu tracer for {platform}")
     return str(pth)

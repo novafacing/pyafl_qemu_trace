@@ -22,6 +22,7 @@ pytest = "^7.1.2"
 memray = "^1.0.3"
 pytest-memray = "^1.0.0"
 psutil = "^5.9.0"
+angr = "^9.2.1"
 
 [tool.poetry.build]
 script = "build.py"
