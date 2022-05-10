@@ -89,7 +89,30 @@ result = TraceParser.parse(log)
 print(f"The trace has {len(result.addrs)} instructions!")
 ```
 
-### Stupidly Parallel Tracing
+### Export trace for viweing
+```python
+
+```python
+from pyafl_qemu_trace import TraceRunner, TraceParser
+from shutil import which
+from pathlib import Path
+retcode, stdout, stderr, log = TraceRunner.run(
+    "x86_64", 
+    which("xxd"), 
+    cwd="/tmp", 
+    input_data="\x41" * 400, 
+    timeout=10
+)
+
+result = TraceParser.parse(log)
+result.export(Path("/tmp/trace.json"))
+```
+
+This trace can then be loaded into binaryninja with
+[the provided trace viewer](utils/trace_viewer.py) by picking
+`Tools -> Plugins -> Open File (QEMU Format)` and selecting the exported JSON file.
+
+### Embarrasingly Parallel Tracing
 
 ```python
 from concurrent.futures import as_completed, ThreadPoolExecutor
@@ -128,6 +151,8 @@ with ThreadPoolExecutor() as executor:
         except Exception as e:
             assert False, "Exception: {}".format(e)
 ```
+### Embarrasingly Parallel Tracing And Parsing
+
 
 (See `test_parse_multi_parallel_real_x86_64` for an example
 that parallelizes the parsing step as well)
