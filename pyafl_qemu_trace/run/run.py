@@ -3,8 +3,8 @@ Run utilities for afl-qemu-trace
 """
 
 from shutil import rmtree
-from typing import Any, Dict, Iterator, List, Optional, Tuple
-from subprocess import PIPE, CompletedProcess, TimeoutExpired, run
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Union
+from subprocess import CompletedProcess, TimeoutExpired, run
 from tempfile import TemporaryDirectory
 from os import mkfifo, unlink
 from os.path import join
@@ -35,7 +35,7 @@ def TemporaryFifo(  # pylint: disable=invalid-name
         rmtree(tmpdir.name)
 
 
-def run_wrapper(q: Queue, args, **kwargs) -> None:
+def run_wrapper(q: Queue, args: Any, **kwargs: Any) -> None:
     """
     Wrapper for running subprocess.run in a multiprocess and
     passing the result to the queue
@@ -64,9 +64,9 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
         argv: Optional[List[str]] = None,
         envp: Optional[Dict[str, str]] = None,
         cwd: Optional[str] = None,
-        input_data: Optional[bytes] = None,
+        input_data: Optional[Union[bytes, Dict[str, bytes]]] = None,
         timeout: Optional[int] = None,
-        input_placeholder: Optional[str] = None,
+        input_placeholder: Optional[str] = None,  # pylint: disable=unused-argument
         base_addr: Optional[int] = None,
         record_events: List[QEMUEvent] = [
             QEMUEvent.NOCHAIN,
@@ -114,7 +114,7 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
 
         if isinstance(input_data, bytes):
             run_args["input"] = input_data
-        elif isinstance(input, dict) and "stdin" in input_data:
+        elif isinstance(input_data, dict) and "stdin" in input_data:
             run_args["input"] = input_data["stdin"]
 
         if cwd is not None:
@@ -173,8 +173,8 @@ class TraceRunner:  # pylint: disable=too-few-public-methods
                         break
                     # This is a choice -- you may want to do this differently,
                     # but if you are going to pass `data` into `TraceParser.parse`, it
-                    # will want a string anyway and anything that errors isn't gonna match
-                    # a regex anyway
+                    # will want a string anyway and anything that errors isn't gonna
+                    # match a regex anyway
 
                     data += rv
                 res = q.get()

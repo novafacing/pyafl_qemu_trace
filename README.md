@@ -6,8 +6,15 @@ pip-installable afl-qemu-trace python package
 
 ## Installation
 
-```
+```sh
 python3 -m pip install pyafl-qemu-trace
+```
+
+If you would like to install the trace viewer for binaryninja:
+
+```sh
+mkdir -p ~/.binaryninja/plugins/trace_viewer/
+cp utilities/trace_viewer.py ~/.binaryninja/plugins/trace_viewer/__init__.py
 ```
 
 ## Building
@@ -21,6 +28,7 @@ You will need to have `poetry`, `docker`, and `docker-compose` or `docker compos
 installed.
 
 To build multiple versions (if you have multiple python versions installed) just:
+
 ```sh
 $ deactivate
 $ poetry env use 3.8
@@ -31,6 +39,24 @@ $ poetry env use 3.9
 $ poetry build -f wheel
 $ poetry publish
 ```
+
+
+## Features
+
+This tool is meant to be, for the most part, dependency free and provided as a
+binary-only package to be used as a component of other tools. However, there are a few
+features beyond what the [inspiration](https://pypi.org/project/shellphish-qemu/) provided.
+
+* Improved trace parsing -- parses more events from the trace and eschews YACC for regex
+* Faster throughput -- uses pipes to collect data from afl-qemu-trace instead of going
+  through the filesystem for super fast reads
+* Has some test cases!
+
+There is also a loader for Binary Ninja [here](utilities/trace_viewer.py) that can load
+parsed `TraceResult` outputs that have been serialized to JSON with `TraceResult.export`
+and display them as a heatmap on the CFG as shown below:
+
+![An image of a binary ninja UI panel with some blocks along an execution highlighted](res/traceviewer.png)
 
 ## Examples
 
@@ -103,6 +129,9 @@ with ThreadPoolExecutor() as executor:
             assert False, "Exception: {}".format(e)
 ```
 
+(See `test_parse_multi_parallel_real_x86_64` for an example
+that parallelizes the parsing step as well)
+
 ## Requirements
 
 Either `docker-compose` or `docker compose` should be available at build time, but when
@@ -117,74 +146,15 @@ Profiling with memray can be added to tests by running `poetry run pytest --memr
 
 ## Targets
 
-Supported targets for `afl-qemu-trace` are as follows, but at the moment only `x86_64`
-and `aarch64` are built -- the infrastructure to generate the rest is already in place,
-however, I just need to enable it.
+Supported targets for `afl-qemu-trace` are as follows:
 
-```txt
-aarch64-softmmu
-alpha-softmmu
-arm-softmmu
-avr-softmmu
-cris-softmmu
-hppa-softmmu
-i386-softmmu
-m68k-softmmu
-microblaze-softmmu
-microblazeel-softmmu
-mips-softmmu
-mips64-softmmu
-mips64el-softmmu
-mipsel-softmmu
-moxie-softmmu
-nios2-softmmu
-or1k-softmmu
-ppc-softmmu
-ppc64-softmmu
-riscv32-softmmu
-riscv64-softmmu
-rx-softmmu
-s390x-softmmu
-sh4-softmmu
-sh4eb-softmmu
-sparc-softmmu
-sparc64-softmmu
-tricore-softmmu
-x86_64-softmmu
-xtensa-softmmu
-xtensaeb-softmmu
-aarch64
-aarch64_be
-alpha
-arm
-armeb
-cris
-hexagon
-hppa
-i386
-m68k
-microblaze
-microblazeel
-mips
-mips64
-mips64el
-mipsel
-mipsn32
-mipsn32el
-nios2
-or1k
-ppc
-ppc64
-ppc64le
-riscv32
-riscv64
-s390x
-sh4
-sh4eb
-sparc
-sparc32plus
-sparc64
-x86_64
-xtensa
-xtensaeb
-```
+* aarch64
+* arm
+* i386
+* mips
+* mips64
+* ppc
+* ppc64
+* riscv32
+* riscv64
+* x86_64

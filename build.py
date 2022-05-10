@@ -12,8 +12,16 @@ from sys import executable
 BINARIES_PATH = Path(__file__).with_name("pyafl_qemu_trace") / "binaries"
 
 TARGETS = [
-    "x86_64",
     "aarch64",
+    "arm",
+    "i386",
+    "mips",
+    "mips64",
+    "ppc",
+    "ppc64",
+    "riscv32",
+    "riscv64",
+    "x86_64",
 ]
 
 

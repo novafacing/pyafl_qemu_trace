@@ -8,6 +8,7 @@ from signal import SIGTERM
 from typing import List
 from psutil import Process, NoSuchProcess
 from os import getpid
+from tempfile import NamedTemporaryFile
 
 from angr import Project
 
@@ -20,6 +21,10 @@ TEST_INPUT_DIR = Path(__file__).with_name("inputs")
 
 
 class DoneException(Exception):
+    """
+    Simple exception to break out of multiple levels of loops
+    """
+
     ...
 
 
@@ -55,7 +60,7 @@ def test_run_x86_64() -> None:
         timeout=30,
     )
     assert res[0] == 0
-    assert len(res[3]) == 8757774
+    assert len(res[3]) > 8000000
 
 
 def test_parse_x86_64() -> None:
@@ -72,7 +77,7 @@ def test_parse_x86_64() -> None:
         timeout=30,
     )
     tr = TraceParser.parse(res[3])
-    assert len(tr.addrs) == 125381
+    assert len(tr.addrs) > 125000
 
 
 def test_parse_real_x86_64() -> None:
@@ -93,7 +98,7 @@ def test_parse_real_x86_64() -> None:
 
     tr = TraceParser.parse(res[3])
 
-    assert len(tr.addrs) == 1618145
+    assert len(tr.addrs) > 1618000
 
 
 def test_parse_multi_real_x86_64() -> None:
@@ -123,6 +128,12 @@ def test_parse_multi_real_x86_64() -> None:
 def test_parse_multi_parallel_real_x86_64() -> None:
     """
     Test running and parsing on a larger x86_64 binary in parallel
+
+    Traces are run on threads because they make a subprocess call that
+    relinquishes the GIL
+
+    Parsing is run on processes because it does not release the GIL and
+    cannot be easily parallelized with threads
     """
     flight_routes = TEST_BINS_DIR / "Flight_Routes" / "Flight_Routes"
     t_executor = ThreadPoolExecutor()
@@ -131,7 +142,7 @@ def test_parse_multi_parallel_real_x86_64() -> None:
 
     try:
         jobs = set()
-        for infile in list(TEST_INPUT_DIR.iterdir())[:50]:
+        for infile in list(TEST_INPUT_DIR.iterdir())[:16]:
             jobs.add(
                 t_executor.submit(
                     TraceRunner.run,
@@ -165,8 +176,8 @@ def test_parse_multi_parallel_real_x86_64() -> None:
                     if len(jobs) <= 0:
                         raise DoneException()
     except DoneException:
-        t_executor.shutdown(wait=False, cancel_futures=True)
-        p_executor.shutdown(wait=False, cancel_futures=True)
+        t_executor.shutdown(wait=False)
+        p_executor.shutdown(wait=False)
         kill_children()
         print("Done.")
 
@@ -194,9 +205,9 @@ def test_parse_multi_parallel_real_x86_64() -> None:
         assert count_in > 0, "No addresses in expected program ranges."
 
 
-def test_run_x86_64_joblib() -> None:
+def test_run_x86_64_parallel() -> None:
     """
-    Test running on an x86_64 binary under joblib
+    Test running on an x86_64 binary in parallel
     """
 
     xxd = str(TEST_BINS_DIR / "xxd")
@@ -228,6 +239,32 @@ def test_run_x86_64_joblib() -> None:
             try:
                 retcode, stdout, stderr, log = future.result()
                 print(f"Completed with: {retcode} and loglength {len(log)}")
-                assert len(log) == 8872190
+                assert len(log) > 8872000
             except Exception as e:
                 assert False, "Exception: {}".format(e)
+
+
+def test_run_x86_64_export() -> None:
+    """
+    Test running and exporting a trace
+    """
+
+    flight_routes = TEST_BINS_DIR / "Flight_Routes" / "Flight_Routes"
+    flight_routes_input = (TEST_INPUT_DIR / "Flight_Routes_1").read_bytes()
+
+    res = TraceRunner.run(
+        "x86_64",
+        str(flight_routes),
+        cwd=str(flight_routes.parent),
+        input_data=flight_routes_input,
+        timeout=30,
+        ld_library_paths=[str(TEST_BINS_DIR / "Flight_Routes")],
+    )
+
+    tr = TraceParser.parse(res[3])
+    tf = NamedTemporaryFile(delete=False, suffix=".json")
+    tfp = Path(tf.name)
+    tr.export(tfp)
+
+    assert tfp.is_file() and tfp.stat().st_size > 0
+    print(tf.name)

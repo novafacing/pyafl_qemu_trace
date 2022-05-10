@@ -5,8 +5,9 @@ Utilities for parsing afl qemu trace logs
 from array import array
 from collections import defaultdict
 from functools import partial
+from json import dumps
 from pathlib import Path
-from re import compile, Match, finditer
+from re import Match, finditer
 from typing import (
     Any,
     Dict,
@@ -19,59 +20,23 @@ from typing import (
     TypeVar,
     Callable,
     Iterator,
+    cast,
 )
-from attr import define, field
+from attr import asdict, define, field
+
+from pyafl_qemu_trace.parse.regs import (
+    TRACE_RE,
+    MMAP_RE,
+    MMAP_LINE_RE,
+    STRACE_RE,
+    MAPPING_RES,
+)
 
 base16 = partial(int, base=16)
 
-TRACE_RE = compile(
-    rb"Trace\s+(?P<trace_number>[0-9]+):\s+(?P<host_addr>0x[0-9a-fA-F]+)\s+"
-    rb"\[(?P<flags1>[0-9a-fA-F]+)"
-    rb"\/(?P<guest_addr>[0-9a-fA-F]+)"
-    rb"\/(?P<flags2>0x[0-9a-fA-F]+)\]"
-)
-
-MMAP_RE = compile(
-    # Header ------------------------------------------------------
-    rb"start\s+end\s+size\s+prot\n"
-    # Start-End ---------------------------------------------------
-    rb"(?:(?P<start>[0-9a-fA-F]+)-(?P<end>[0-9a-fA-F]+)"
-    # Size Prot ---------------------------------------------------
-    rb"\s+(?P<size>[0-9a-fA-F]+)\s+(?P<prot>[rwx-]+)[\n]?)+"
-)
-
-MMAP_LINE_RE = compile(
-    rb"(?:(?P<start>[0-9a-fA-F]+)-(?P<end>[0-9a-fA-F]+)"
-    # Size Prot ---------------------------------------------------
-    rb"\s+(?P<size>[0-9a-fA-F]+)\s+(?P<prot>[rwx-]+)[\n]?)"
-)
-
-STRACE_RE = compile(
-    rb"(?P<syscall_num>[0-9]+)\s+(?P<syscall_name>\w+)\((?P<syscall_args>[^\)]*)\)"
-    rb"(?P<syscall_output>[^=]|\n)*=\s*(?P<syscall_ret>[-]?[0-9]+)"
-    rb"(\s?errno\s?=\s?(?P<syscall_errno>[-]?[0-9]+)\s?\((?P<syscall_errmsg>[^\)]+)\))?"
-)
-
-MAPPING_RES = {
-    "guest_base": compile(rb"guest_base\s+0x(?P<guest_base>[0-9a-fA-F]+)"),
-    "start_brk": compile(rb"start_brk\s+0x(?P<start_brk>[0-9a-fA-F]+)"),
-    "start_code": compile(rb"start_code\s+0x(?P<start_code>[0-9a-fA-F]+)"),
-    "end_code": compile(rb"end_code\s+0x(?P<end_code>[0-9a-fA-F]+)"),
-    "start_data": compile(rb"start_data\s+0x(?P<start_data>[0-9a-fA-F]+)"),
-    "end_data": compile(rb"end_data\s+0x(?P<end_data>[0-9a-fA-F]+)"),
-    "start_stack": compile(rb"start_stack\s+0x(?P<start_stack>[0-9a-fA-F]+)"),
-    "brk": compile(rb"brk\s+0x(?P<brk>[0-9a-fA-F]+)"),
-    "entry": compile(rb"entry\s+0x(?P<entry>[0-9a-fA-F]+)"),
-    "argv_start": compile(rb"argv_start\s+0x(?P<argv_start>[0-9a-fA-F]+)"),
-    "env_start": compile(rb"env_start\s+0x(?P<env_start>[0-9a-fA-F]+)"),
-    "auxv_start": compile(rb"auxv_start\s+0x(?P<auxv_start>[0-9a-fA-F]+)"),
-}
-
-V = TypeVar("V")
-
 
 @define(frozen=True, slots=True)
-class MMap:
+class MMap:  # pylint: disable=too-few-public-methods
     """
     Memory mapping
     """
@@ -79,34 +44,34 @@ class MMap:
     start: int = field(converter=lambda x: int(x, base=16))  # type: ignore
     end: int = field(converter=lambda x: int(x, base=16))  # type: ignore
     size: int = field(converter=lambda x: int(x, base=16))  # type: ignore
-    prot: bytes
+    prot: str
 
 
 @define(frozen=True, slots=True)
-class Syscall:
+class Syscall:  # pylint: disable=too-few-public-methods
     """
     Simple descriptor of a syscall
     """
 
-    name: bytes
+    name: str
     ret: int = field(converter=int)
-    args: List[bytes] = field(factory=list)
+    args: List[str] = field(factory=list)
     errno: Optional[int] = field(
-        default=None, converter=lambda x: int(x) if x else None
+        default=None, converter=lambda x: int(x) if x else None  # type: ignore
     )
-    err: Optional[bytes] = None
+    err: Optional[str] = None
 
 
 @define(slots=True)
-class TraceResult:
+class TraceResult:  # pylint: disable=too-few-public-methods
     """
     Result of a trace
     """
 
     # Straight up list of addresses
     addrs: array
-    # Mapping of index in addrs: list of mmaps in the mapping output at that last index before
-    # the mapping
+    # Mapping of index in addrs: list of mmaps in the mapping output at that
+    # last index before the mapping
     maps: Dict[int, Set[MMap]]
     # Mapping of the index in addrs: syscall at that last index before the syscall
     syscalls: Dict[int, Syscall]
@@ -124,6 +89,39 @@ class TraceResult:
     env_start: Optional[int] = None
     auxv_start: Optional[int] = None
     mmap_min: Optional[int] = None
+
+    def export(self, where: Path) -> None:
+        """
+        Export the trace to a file as JSON
+        """
+        if not where.is_file():
+            raise ValueError(f"{where} is not a file")
+
+        where.write_text(
+            dumps(
+                {
+                    "addrs": self.addrs.tolist(),
+                    "maps": {k: list(map(asdict, v)) for k, v in self.maps.items()},
+                    "syscalls": {k: asdict(v) for k, v in self.syscalls.items()},
+                    "guest_base": self.guest_base,
+                    "start_brk": self.start_brk,
+                    "start_code": self.start_code,
+                    "end_code": self.end_code,
+                    "start_data": self.start_data,
+                    "end_data": self.end_data,
+                    "start_stack": self.start_stack,
+                    "brk": self.brk,
+                    "entry": self.entry,
+                    "argv_start": self.argv_start,
+                    "env_start": self.env_start,
+                    "auxv_start": self.auxv_start,
+                    "mmap_min": self.mmap_min,
+                }
+            )
+        )
+
+
+V = TypeVar("V")
 
 
 def interleave_lambda_longest(func: Callable, *args: Iterable[V]) -> Iterator[V]:
@@ -191,11 +189,13 @@ class TraceParser:
         else:
             raise TypeError(f"log must be a string or a Path, got {type(log)}")
 
-        res = TraceResult(array("Q"), defaultdict(set), dict())
+        # TODO: Array should be typed according to the platform data size to conserve
+        # space on 32-bit or smaller architectures
+        res = TraceResult(array("Q"), defaultdict(set), {})
 
         mapping_data = {}
-        for type, regex in MAPPING_RES.items():
-            mapping_data[type] = regex.search(contents)
+        for typ, regex in MAPPING_RES.items():
+            mapping_data[typ] = regex.search(contents)
 
         for typ, mtch in mapping_data.items():
             if mtch is not None:
@@ -219,16 +219,17 @@ class TraceParser:
                             submtch.group("start"),
                             submtch.group("end"),
                             submtch.group("size"),
-                            submtch.group("prot"),
+                            submtch.group("prot").decode("utf-8"),
                         )
                     )
             elif typ == "STRACE":
+                errmsg = mtch.groupdict().get("syscall_errmsg")
                 res.syscalls[len(res.addrs) - 1] = Syscall(
-                    mtch.group("syscall_name"),
+                    mtch.group("syscall_name").decode("utf-8"),
                     mtch.group("syscall_ret"),
-                    mtch.group("syscall_args").split(b","),
+                    mtch.group("syscall_args").decode("utf-8").split(","),
                     mtch.groupdict().get("syscall_errno"),
-                    mtch.groupdict().get("syscall_errmsg"),
+                    cast(bytes, errmsg).decode("utf-8") if errmsg else None,
                 )
 
         return res
