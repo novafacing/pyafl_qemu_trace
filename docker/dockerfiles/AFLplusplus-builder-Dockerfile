@@ -40,13 +40,7 @@ RUN apt-get update -y && \
 RUN update-alternatives --install /usr/bin/gcc gcc $(which gcc-9) 100 \
     && update-alternatives --install /usr/bin/g++ g++ $(which g++-9) 100
 
-# Solve an issue where a message like:
-# fatal: unable to access 'https://github.com/AFLplusplus/AFLplusplus/': 
-# server certificate verification failed. CAfile: none CRLfile: none
-# is printed -- not sure exactly what causes this, but it is an issue
-# behind corporate networks
-RUN apt-get install --reinstall ca-certificates && \
-	git clone https://github.com/AFLplusplus/AFLplusplus /AFLplusplus
+RUN git clone https://github.com/AFLplusplus/AFLplusplus /AFLplusplus
 WORKDIR /AFLplusplus
 RUN git fetch --all
 RUN git checkout 1d4f1e48797c064ee71441ba555b29fc3f467983
