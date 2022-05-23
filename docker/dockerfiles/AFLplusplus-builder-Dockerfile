@@ -46,6 +46,11 @@ RUN update-alternatives --install /usr/bin/gcc gcc $(which gcc-9) 100 \
 # is printed -- not sure exactly what causes this, but it is an issue
 # behind corporate networks
 RUN apt-get install --reinstall ca-certificates && \
+	mkdir /usr/local/share/ca-certificates/cacert.org && \
+	wget -P /usr/local/share/ca-certificates/cacert.org \
+	http://www.cacert.org/certs/root.crt \
+	http://www.cacert.org/certs/class3.crt && \
+	git config --global http.sslCAinfo /etc/ssl/certs/ca-certificates.crt && \
 	git clone https://github.com/AFLplusplus/AFLplusplus /AFLplusplus
 WORKDIR /AFLplusplus
 RUN git fetch --all
