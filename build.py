@@ -61,7 +61,7 @@ def _has_compose_v2() -> bool:
     as a plugin instead of a separate utility.
     """
     try:
-        run("docker compose --help", check=True, capture_output=True, shell=True)
+        run("docker compose", check=True, capture_output=True, shell=True)
         return True
     except:
         return False
@@ -73,7 +73,7 @@ def _has_compose_v1() -> bool:
     as a plugin instead of a separate utility.
     """
     try:
-        run("docker-compose --help", check=True, capture_output=True, shell=True)
+        run("docker-compose", check=True, capture_output=True, shell=True)
         return True
     except:
         return False
