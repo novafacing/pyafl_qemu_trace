@@ -84,7 +84,7 @@ def _docker_cmd() -> str:
     Get the appropriate docker command
     """
     if _has_compose_v2():
-        return "docker"
+        return "docker compose"
     elif _has_compose_v1():
         return "docker-compose"
     else:
@@ -110,7 +110,7 @@ def _build_tracers() -> None:
     for target in TARGETS:
         try:
             run(
-                f"{_docker_cmd()} compose up afl_qemu_trace_{target} --build",
+                f"{_docker_cmd()} up afl_qemu_trace_{target} --build",
                 capture_output=True,
                 cwd=str(Path(__file__).with_name("docker").resolve()),
                 check=True,
