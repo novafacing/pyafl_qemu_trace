@@ -4,7 +4,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-aarch64-softmmu
+      target: aflplusplus-builder-aarch64-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-aarch64-softmmu && chmod 755 /output/binaries/afl-qemu-trace-aarch64-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -13,7 +13,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-alpha-softmmu
+      target: aflplusplus-builder-alpha-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-alpha-softmmu && chmod 755 /output/binaries/afl-qemu-trace-alpha-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -22,7 +22,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-arm-softmmu
+      target: aflplusplus-builder-arm-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-arm-softmmu && chmod 755 /output/binaries/afl-qemu-trace-arm-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -31,7 +31,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-avr-softmmu
+      target: aflplusplus-builder-avr-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-avr-softmmu && chmod 755 /output/binaries/afl-qemu-trace-avr-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -40,7 +40,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-cris-softmmu
+      target: aflplusplus-builder-cris-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-cris-softmmu && chmod 755 /output/binaries/afl-qemu-trace-cris-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -49,7 +49,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-hppa-softmmu
+      target: aflplusplus-builder-hppa-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-hppa-softmmu && chmod 755 /output/binaries/afl-qemu-trace-hppa-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -58,7 +58,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-i386-softmmu
+      target: aflplusplus-builder-i386-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-i386-softmmu && chmod 755 /output/binaries/afl-qemu-trace-i386-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -67,7 +67,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-m68k-softmmu
+      target: aflplusplus-builder-m68k-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-m68k-softmmu && chmod 755 /output/binaries/afl-qemu-trace-m68k-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -76,7 +76,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-microblaze-softmmu
+      target: aflplusplus-builder-microblaze-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-microblaze-softmmu && chmod 755 /output/binaries/afl-qemu-trace-microblaze-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -85,7 +85,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-microblazeel-softmmu
+      target: aflplusplus-builder-microblazeel-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-microblazeel-softmmu && chmod 755 /output/binaries/afl-qemu-trace-microblazeel-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -94,7 +94,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mips-softmmu
+      target: aflplusplus-builder-mips-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mips-softmmu && chmod 755 /output/binaries/afl-qemu-trace-mips-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -103,7 +103,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mips64-softmmu
+      target: aflplusplus-builder-mips64-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mips64-softmmu && chmod 755 /output/binaries/afl-qemu-trace-mips64-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -112,7 +112,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mips64el-softmmu
+      target: aflplusplus-builder-mips64el-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mips64el-softmmu && chmod 755 /output/binaries/afl-qemu-trace-mips64el-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -121,7 +121,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mipsel-softmmu
+      target: aflplusplus-builder-mipsel-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mipsel-softmmu && chmod 755 /output/binaries/afl-qemu-trace-mipsel-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -130,7 +130,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-moxie-softmmu
+      target: aflplusplus-builder-moxie-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-moxie-softmmu && chmod 755 /output/binaries/afl-qemu-trace-moxie-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -139,7 +139,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-nios2-softmmu
+      target: aflplusplus-builder-nios2-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-nios2-softmmu && chmod 755 /output/binaries/afl-qemu-trace-nios2-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -148,7 +148,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-or1k-softmmu
+      target: aflplusplus-builder-or1k-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-or1k-softmmu && chmod 755 /output/binaries/afl-qemu-trace-or1k-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -157,7 +157,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-ppc-softmmu
+      target: aflplusplus-builder-ppc-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-ppc-softmmu && chmod 755 /output/binaries/afl-qemu-trace-ppc-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -166,7 +166,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-ppc64-softmmu
+      target: aflplusplus-builder-ppc64-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-ppc64-softmmu && chmod 755 /output/binaries/afl-qemu-trace-ppc64-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -175,7 +175,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-riscv32-softmmu
+      target: aflplusplus-builder-riscv32-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-riscv32-softmmu && chmod 755 /output/binaries/afl-qemu-trace-riscv32-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -184,7 +184,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-riscv64-softmmu
+      target: aflplusplus-builder-riscv64-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-riscv64-softmmu && chmod 755 /output/binaries/afl-qemu-trace-riscv64-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -193,7 +193,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-rx-softmmu
+      target: aflplusplus-builder-rx-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-rx-softmmu && chmod 755 /output/binaries/afl-qemu-trace-rx-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -202,7 +202,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-s390x-softmmu
+      target: aflplusplus-builder-s390x-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-s390x-softmmu && chmod 755 /output/binaries/afl-qemu-trace-s390x-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -211,7 +211,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sh4-softmmu
+      target: aflplusplus-builder-sh4-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sh4-softmmu && chmod 755 /output/binaries/afl-qemu-trace-sh4-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -220,7 +220,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sh4eb-softmmu
+      target: aflplusplus-builder-sh4eb-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sh4eb-softmmu && chmod 755 /output/binaries/afl-qemu-trace-sh4eb-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -229,7 +229,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sparc-softmmu
+      target: aflplusplus-builder-sparc-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sparc-softmmu && chmod 755 /output/binaries/afl-qemu-trace-sparc-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -238,7 +238,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sparc64-softmmu
+      target: aflplusplus-builder-sparc64-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sparc64-softmmu && chmod 755 /output/binaries/afl-qemu-trace-sparc64-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -247,7 +247,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-tricore-softmmu
+      target: aflplusplus-builder-tricore-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-tricore-softmmu && chmod 755 /output/binaries/afl-qemu-trace-tricore-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -256,7 +256,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-x86_64-softmmu
+      target: aflplusplus-builder-x86_64-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-x86_64-softmmu && chmod 755 /output/binaries/afl-qemu-trace-x86_64-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -265,7 +265,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-xtensa-softmmu
+      target: aflplusplus-builder-xtensa-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-xtensa-softmmu && chmod 755 /output/binaries/afl-qemu-trace-xtensa-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -274,7 +274,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-xtensaeb-softmmu
+      target: aflplusplus-builder-xtensaeb-softmmu
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-xtensaeb-softmmu && chmod 755 /output/binaries/afl-qemu-trace-xtensaeb-softmmu
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -283,7 +283,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-aarch64
+      target: aflplusplus-builder-aarch64
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-aarch64 && chmod 755 /output/binaries/afl-qemu-trace-aarch64
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -292,7 +292,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-aarch64_be
+      target: aflplusplus-builder-aarch64_be
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-aarch64_be && chmod 755 /output/binaries/afl-qemu-trace-aarch64_be
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -301,7 +301,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-alpha
+      target: aflplusplus-builder-alpha
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-alpha && chmod 755 /output/binaries/afl-qemu-trace-alpha
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -310,7 +310,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-arm
+      target: aflplusplus-builder-arm
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-arm && chmod 755 /output/binaries/afl-qemu-trace-arm
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -319,7 +319,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-armeb
+      target: aflplusplus-builder-armeb
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-armeb && chmod 755 /output/binaries/afl-qemu-trace-armeb
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -328,7 +328,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-cris
+      target: aflplusplus-builder-cris
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-cris && chmod 755 /output/binaries/afl-qemu-trace-cris
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -337,7 +337,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-hexagon
+      target: aflplusplus-builder-hexagon
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-hexagon && chmod 755 /output/binaries/afl-qemu-trace-hexagon
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -346,7 +346,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-hppa
+      target: aflplusplus-builder-hppa
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-hppa && chmod 755 /output/binaries/afl-qemu-trace-hppa
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -355,7 +355,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-i386
+      target: aflplusplus-builder-i386
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-i386 && chmod 755 /output/binaries/afl-qemu-trace-i386
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -364,7 +364,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-m68k
+      target: aflplusplus-builder-m68k
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-m68k && chmod 755 /output/binaries/afl-qemu-trace-m68k
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -373,7 +373,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-microblaze
+      target: aflplusplus-builder-microblaze
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-microblaze && chmod 755 /output/binaries/afl-qemu-trace-microblaze
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -382,7 +382,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-microblazeel
+      target: aflplusplus-builder-microblazeel
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-microblazeel && chmod 755 /output/binaries/afl-qemu-trace-microblazeel
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -391,7 +391,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mips
+      target: aflplusplus-builder-mips
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mips && chmod 755 /output/binaries/afl-qemu-trace-mips
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -400,7 +400,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mips64
+      target: aflplusplus-builder-mips64
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mips64 && chmod 755 /output/binaries/afl-qemu-trace-mips64
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -409,7 +409,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mips64el
+      target: aflplusplus-builder-mips64el
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mips64el && chmod 755 /output/binaries/afl-qemu-trace-mips64el
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -418,7 +418,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mipsel
+      target: aflplusplus-builder-mipsel
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mipsel && chmod 755 /output/binaries/afl-qemu-trace-mipsel
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -427,7 +427,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mipsn32
+      target: aflplusplus-builder-mipsn32
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mipsn32 && chmod 755 /output/binaries/afl-qemu-trace-mipsn32
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -436,7 +436,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-mipsn32el
+      target: aflplusplus-builder-mipsn32el
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-mipsn32el && chmod 755 /output/binaries/afl-qemu-trace-mipsn32el
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -445,7 +445,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-nios2
+      target: aflplusplus-builder-nios2
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-nios2 && chmod 755 /output/binaries/afl-qemu-trace-nios2
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -454,7 +454,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-or1k
+      target: aflplusplus-builder-or1k
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-or1k && chmod 755 /output/binaries/afl-qemu-trace-or1k
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -463,7 +463,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-ppc
+      target: aflplusplus-builder-ppc
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-ppc && chmod 755 /output/binaries/afl-qemu-trace-ppc
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -472,7 +472,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-ppc64
+      target: aflplusplus-builder-ppc64
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-ppc64 && chmod 755 /output/binaries/afl-qemu-trace-ppc64
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -481,7 +481,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-ppc64le
+      target: aflplusplus-builder-ppc64le
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-ppc64le && chmod 755 /output/binaries/afl-qemu-trace-ppc64le
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -490,7 +490,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-riscv32
+      target: aflplusplus-builder-riscv32
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-riscv32 && chmod 755 /output/binaries/afl-qemu-trace-riscv32
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -499,7 +499,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-riscv64
+      target: aflplusplus-builder-riscv64
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-riscv64 && chmod 755 /output/binaries/afl-qemu-trace-riscv64
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -508,7 +508,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-s390x
+      target: aflplusplus-builder-s390x
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-s390x && chmod 755 /output/binaries/afl-qemu-trace-s390x
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -517,7 +517,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sh4
+      target: aflplusplus-builder-sh4
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sh4 && chmod 755 /output/binaries/afl-qemu-trace-sh4
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -526,7 +526,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sh4eb
+      target: aflplusplus-builder-sh4eb
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sh4eb && chmod 755 /output/binaries/afl-qemu-trace-sh4eb
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -535,7 +535,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sparc
+      target: aflplusplus-builder-sparc
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sparc && chmod 755 /output/binaries/afl-qemu-trace-sparc
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -544,7 +544,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sparc32plus
+      target: aflplusplus-builder-sparc32plus
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sparc32plus && chmod 755 /output/binaries/afl-qemu-trace-sparc32plus
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -553,7 +553,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-sparc64
+      target: aflplusplus-builder-sparc64
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-sparc64 && chmod 755 /output/binaries/afl-qemu-trace-sparc64
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -562,7 +562,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-x86_64
+      target: aflplusplus-builder-x86_64
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-x86_64 && chmod 755 /output/binaries/afl-qemu-trace-x86_64
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -571,7 +571,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-xtensa
+      target: aflplusplus-builder-xtensa
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-xtensa && chmod 755 /output/binaries/afl-qemu-trace-xtensa
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/
@@ -580,7 +580,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/dockerfiles/AFLplusplus-builder-Dockerfile
-      target: AFLplusplus-builder-xtensaeb
+      target: aflplusplus-builder-xtensaeb
     command: cp /AFLplusplus/afl-qemu-trace /output/binaries/afl-qemu-trace-xtensaeb && chmod 755 /output/binaries/afl-qemu-trace-xtensaeb
     volumes:
       - ../pyafl_qemu_trace/binaries/:/output/binaries/

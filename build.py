@@ -110,7 +110,7 @@ def _build_tracers() -> None:
     for target in TARGETS:
         try:
             run(
-                f"{_docker_cmd()} up afl_qemu_trace_{target} --build",
+                f"{_docker_cmd()} up --build afl_qemu_trace_{target}",
                 capture_output=True,
                 cwd=str(Path(__file__).with_name("docker").resolve()),
                 check=True,
